@@ -539,7 +539,7 @@
       meanDelayS: tot.n ? tot.dT / tot.n : 0, p95DelayS: percentile(dTs, 0.95), maxDelayS: dTs.length ? dTs[dTs.length - 1] : 0,
       minDelayS: dTs.length ? dTs[0] : 0,
       energyTRY, energyTotalTRY, timeTRY, combinedTRY: energyTotalTRY + timeTRY,
-      usd: x => x / pr.fx, votSensitivity,
+      fx: pr.fx, votSensitivity,
       exposurePersonHours: tot.dExpPersonS / 3600, baseTot, increase, context,
       perVehicleTRY: tot.n ? (energyTotalTRY + timeTRY) / tot.n : 0,
       bayUtilisation: cp.stats.serviceSeconds / Math.max(1, p.bays * cp.D),
@@ -551,7 +551,7 @@
     const cp = runScenario(p, manifest, true);
     const base = runScenario(p, manifest, false);
     const acc = account(base, cp, p);
-    return { p, manifest, cp, base, acc };
+    return { p, manifest: { vehicles: manifest.vehicles }, cp, base, acc };
   }
 
   // ---------- exports ----------

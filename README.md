@@ -9,18 +9,28 @@ Open `index.html` in a browser. No build step, no server, no external libraries.
 
 ## What it shows
 
+- **Scenario sentence**: every parameter is a chip inside one sentence. A chip opens
+  a short list of predefined, literature-informed options (each with its source note
+  and the simulated cost and CO₂ it would give, computed in the background), plus a
+  stepper for any other value. Six preset buttons set whole scenarios.
 - **Cost** (₺ and US$): extra fuel and electricity priced at dated retail prices,
   and valued travel time at a stated value of time. The two are kept separate, as the
   handout requires: fuel is an expenditure, valued time is a valuation.
-- **Pollution**: extra tailpipe CO₂, NOₓ and exhaust PM, extra fuel by type,
-  friction-braking energy (a wear indicator, no wear mass is invented) and extra
-  person-hours spent in slow traffic near the checkpoint (an exposure proxy).
-- **Paired replay**: top-down view of the baseline lane and the checkpoint lane for
-  the same vehicles, with screening zone, inspection bays, waiting pocket, selected
-  vehicles and queue tail. The corridor minimap shows the full queue extent.
-- **Queue over time**, delay statistics, inspection counts and run-integrity flags.
+- **Pollution**: extra tailpipe CO₂, NOₓ and exhaust PM with their percentage
+  increase over the same vehicles on a free road, extra fuel by type, friction-braking
+  energy (a wear indicator, no wear mass is invented), extra person-hours in slow
+  traffic near the checkpoint, and an "in context" list that expresses the extras as
+  kilometres driven, household electricity days, tree-years and Euro-limit distances.
+- **Paired replay**: an elevated orthographic scene of the baseline road and the
+  checkpoint road for the same vehicles, with screening zone, gantry, bays, waiting
+  pocket, selected vehicles and queue tail. It plays continuously and keeps playing
+  after every parameter change. The corridor minimap shows the full queue extent.
+- **Queue over time**, a results strip and run-integrity flags.
 - **Assumptions table** with evidence labels (SOURCED / ASSUMED / SIMULATED) and
   CSV exports of the assumptions and the per-vehicle paired results.
+
+The model runs in a Web Worker when the page is served over HTTP (or hosted); opened
+from a local file it falls back to running on the main thread.
 
 ## Model
 
@@ -73,6 +83,7 @@ index.html          page
 css/style.css       tokens and layout (handout palette: paper, ink, blue, orange, yellow, green, grey)
 js/model.js         manifest, traffic model, energy and emission accounting, exports
 js/benchmarks.js    analytical benchmarks used as acceptance tests
-js/app.js           controls, panels, replay, chart
+js/app.js           scenario chips, presets, panels, elevated replay, chart
+js/worker.js        background runner for the paired model
 tests/run-tests.js  acceptance tests (node)
 ```

@@ -18,21 +18,21 @@
   <div class="tag">Synthetic demo<small>Uncalibrated starter values. No measured checkpoint effect is asserted.</small></div>
 </header>
 
-<div class="grid">
-  <aside class="controls" aria-label="Scenario controls">
-    <h2 class="sec">Scenario <span class="tr">Senaryo</span> <span class="badge assumed">Assumed</span></h2>
-    <div id="controls"></div>
-    <details>
-      <summary>More assumptions and prices</summary>
-      <div id="controls-more"></div>
-    </details>
-    <div class="row">
-      <button type="button" id="reset" class="ghost">Reset to starter values</button>
+<section class="scenario" aria-label="Scenario">
+  <div class="scen-head">
+    <h2 class="sec" style="margin:0">Scenario <span class="tr">Senaryo</span> <span class="badge assumed">Assumed · literature-informed options</span></h2>
+    <div class="scen-tools">
+      <button type="button" id="shuffle" class="ghost small" title="Draw a new random vehicle list with the same settings">New vehicle draw</button>
+      <button type="button" id="reset" class="ghost small">Reset</button>
     </div>
-    <div class="status" id="status" aria-live="polite"></div>
-  </aside>
+  </div>
+  <div class="presets" id="presets" role="group" aria-label="Preset scenarios"></div>
+  <p class="sentence" id="sentence"></p>
+  <div class="pop" id="pop" hidden role="dialog" aria-label="Choose a value"></div>
+  <div class="status" id="status" aria-live="polite"></div>
+</section>
 
-  <div class="stage">
+<div class="stage">
     <section class="hero" aria-label="Headline results">
       <article class="panel cost" id="costPanel">
         <header><h2>Cost <span class="tr">Maliyet</span></h2><span class="badge assumed">Sourced prices · assumed time value</span></header>
@@ -55,9 +55,9 @@
         <h2 class="sec" style="margin:0">Paired replay <span class="tr">same vehicles, with and without the checkpoint</span></h2>
         <div class="clock" id="clock"></div>
       </div>
-      <canvas id="road" role="img" aria-label="Top-down replay of the baseline lane and the checkpoint lane"></canvas>
+      <canvas id="road" role="img" aria-label="Elevated view of the baseline road and the checkpoint road"></canvas>
       <div class="transport">
-        <button type="button" id="play" aria-label="Play or pause">Play</button>
+        <button type="button" id="play" aria-label="Play or pause">Pause</button>
         <select id="speed" aria-label="Playback speed"><option value="1">1×</option><option value="4" selected>4×</option><option value="16">16×</option><option value="60">60×</option></select>
         <input type="range" id="scrub" min="0" max="0" value="0" step="1" aria-label="Replay time">
       </div>
@@ -90,7 +90,6 @@
       <textarea class="csv" id="csvOut" readonly aria-label="CSV export" placeholder="Choose an export above."></textarea>
       <p class="note">Keep monetary categories separate: extra fuel is an expenditure; valued time is an economic valuation, not an invoice. The no-checkpoint comparison estimates transport and emission consequences only. It says nothing about crimes prevented, unsafe drivers detected or enforcement effectiveness.</p>
     </details>
-  </div>
 </div>
 
 <footer>
