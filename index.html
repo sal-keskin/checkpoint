@@ -21,10 +21,9 @@
 <div class="grid">
   <aside class="controls" aria-label="Scenario controls">
     <h2 class="sec">Scenario <span class="tr">Senaryo</span> <span class="badge assumed">Assumed</span></h2>
-    <p class="hint">Move a slider and release. The baseline and the checkpoint run are recomputed for the same vehicle list.</p>
     <div id="controls"></div>
     <details>
-      <summary>More assumptions · Diğer varsayımlar</summary>
+      <summary>More assumptions and prices</summary>
       <div id="controls-more"></div>
     </details>
     <div class="row">
@@ -38,21 +37,22 @@
       <article class="panel cost" id="costPanel">
         <header><h2>Cost <span class="tr">Maliyet</span></h2><span class="badge assumed">Sourced prices · assumed time value</span></header>
         <div class="big" id="costBig">—</div>
-        <p class="cap" id="costCap">Combined partial burden for the affected vehicle cohort. Excludes wear, pollution damage, crashes and enforcement costs or benefits.</p>
-        <dl class="kv" id="costKv"></dl>
+        <p class="cap">Extra fuel and electricity plus valued travel time for every vehicle caught by the checkpoint, compared with the same vehicles on a free road.</p>
         <div class="bars" id="costBars"></div>
+        <p class="cap" id="costLine"></p>
         <p class="cap" id="votLine"></p>
       </article>
       <article class="panel pollution" id="polPanel">
-        <header><h2>Pollution <span class="tr">Kirlilik</span></h2><span class="badge simulated">Simulated · model-based</span></header>
+        <header><h2>Pollution <span class="tr">Kirlilik</span></h2><span class="badge simulated">Simulated · tailpipe</span></header>
         <div class="tiles" id="polTiles"></div>
-        <p class="cap">Tailpipe quantities from a wheel-power fuel model with assumed emission factors. Brake and tyre wear are reported as friction-braking energy only; no wear mass is invented. Negative values mean the slower trajectory used less.</p>
+        <h3 class="ctx-h">In context <span class="badge assumed">Assumed references</span></h3>
+        <ul class="ctx" id="context"></ul>
       </article>
     </section>
 
     <section class="replay" aria-label="Paired trajectory replay">
       <div class="head">
-        <h2 class="sec" style="margin:0">Paired replay <span class="tr">Aynı araçlar · same vehicle cohort</span> <span class="badge simulated">Simulated</span></h2>
+        <h2 class="sec" style="margin:0">Paired replay <span class="tr">same vehicles, with and without the checkpoint</span></h2>
         <div class="clock" id="clock"></div>
       </div>
       <canvas id="road" role="img" aria-label="Top-down replay of the baseline lane and the checkpoint lane"></canvas>
@@ -66,17 +66,17 @@
       </div>
     </section>
 
-    <section class="sec-grid" id="secondary" aria-label="Delay, queue and inspection results"></section>
+    <section class="strip" id="strip" aria-label="Delay, queue and inspection results"></section>
 
     <section class="chart" aria-label="Vehicles in queue over time">
-      <h2 class="sec" style="margin:0 0 6px">Vehicles in queue <span class="tr">Kuyruktaki araçlar</span> <span class="badge simulated">Simulated</span></h2>
+      <h2 class="sec" style="margin:0 0 6px">Vehicles in queue</h2>
       <canvas id="queueChart" role="img" aria-label="Line chart of vehicles queued upstream of the screening point over time"></canvas>
       <div class="tip" id="tip" hidden></div>
-      <p class="cap">Vehicles slowed below half their desired speed upstream of the screening point. Queue accumulation continues to impose delay after the restriction ends.</p>
+      <p class="cap">Vehicles slowed below half their desired speed upstream of the screening point. The queue keeps imposing delay after the restriction ends.</p>
     </section>
 
     <details class="assume">
-      <summary>Inputs, provenance and exports <span class="tr">Varsayımlar · Girdiler</span></summary>
+      <summary>Inputs, provenance, checks and exports</summary>
       <h2 class="sec">Acceptance checks</h2>
       <ul class="checks" id="checks"></ul>
       <h2 class="sec">Assumptions table <span class="tr">exported with every result</span></h2>

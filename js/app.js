@@ -17,25 +17,25 @@
 
   // ---------- controls ----------
   const PRIMARY = [
-    { key: 'arrivalRate', label: 'Traffic', tr: 'Trafik', min: 300, max: 2400, step: 100, unit: 'veh/h' },
-    { key: 'selectedFraction', label: 'Inspected share', tr: 'Kontrol edilen', min: 0, max: 50, step: 1, unit: '%', scale: 100 },
-    { key: 'bays', label: 'Inspection bays', tr: 'Kontrol cebi', min: 1, max: 6, step: 1, unit: '' },
-    { key: 'serviceMean', label: 'Inspection time, mean', tr: 'Kontrol süresi', min: 20, max: 240, step: 10, unit: 's' },
-    { key: 'durationMin', label: 'Checkpoint duration', tr: 'Süre', min: 5, max: 120, step: 5, unit: 'min' },
-    { key: 'overflow', label: 'When bays and pocket are full', tr: 'Taşma', type: 'select', options: [['block', 'Hold the through lane'], ['skip', 'Release unserved']] },
+    { key: 'arrivalRate', label: 'Traffic', min: 300, max: 2400, step: 100, unit: 'veh/h' },
+    { key: 'selectedFraction', label: 'Inspected share', min: 0, max: 50, step: 1, unit: '%', scale: 100 },
+    { key: 'bays', label: 'Inspection bays', min: 1, max: 6, step: 1, unit: '' },
+    { key: 'serviceMean', label: 'Inspection time, mean', min: 20, max: 240, step: 10, unit: 's' },
+    { key: 'durationMin', label: 'Checkpoint duration', min: 5, max: 120, step: 5, unit: 'min' },
+    { key: 'overflow', label: 'When bays and pocket are full', type: 'select', options: [['block', 'Hold the through lane'], ['skip', 'Release unserved']] },
   ];
   const MORE = [
-    { key: 'screeningSpeed', label: 'Screening speed', tr: 'Tarama hızı', min: 10, max: 60, step: 5, unit: 'km/h' },
-    { key: 'screeningHeadway', label: 'Screening headway', tr: 'Tarama aralığı', min: 2, max: 10, step: 0.5, unit: 's/veh' },
-    { key: 'pocket', label: 'Waiting pocket', tr: 'Bekleme yeri', min: 0, max: 6, step: 1, unit: 'slots' },
-    { key: 'heavyShare', label: 'Heavy vehicles', tr: 'Ağır taşıt', min: 0, max: 30, step: 1, unit: '%', scale: 100 },
-    { key: 'seed', label: 'Random seed', tr: 'Tohum', min: 1, max: 30, step: 1, unit: '' },
-    { key: 'vot', label: 'Value of time', tr: 'Zaman değeri', min: 50, max: 600, step: 10, unit: '₺/person-h', price: true },
-    { key: 'petrol', label: 'Petrol price', tr: 'Benzin', type: 'number', step: 0.1, unit: '₺/L', price: true },
-    { key: 'diesel', label: 'Diesel price', tr: 'Dizel', type: 'number', step: 0.1, unit: '₺/L', price: true },
-    { key: 'lpg', label: 'LPG price', tr: 'LPG', type: 'number', step: 0.1, unit: '₺/L', price: true },
-    { key: 'electricity', label: 'Electricity price', tr: 'Elektrik', type: 'number', step: 0.1, unit: '₺/kWh', price: true },
-    { key: 'fx', label: 'Exchange rate', tr: 'Kur', type: 'number', step: 0.001, unit: '₺ per US$', price: true },
+    { key: 'screeningSpeed', label: 'Screening speed', min: 10, max: 60, step: 5, unit: 'km/h' },
+    { key: 'screeningHeadway', label: 'Screening headway', min: 2, max: 10, step: 0.5, unit: 's/veh' },
+    { key: 'pocket', label: 'Waiting pocket', min: 0, max: 6, step: 1, unit: 'slots' },
+    { key: 'heavyShare', label: 'Heavy vehicles', min: 0, max: 30, step: 1, unit: '%', scale: 100 },
+    { key: 'seed', label: 'Random seed', min: 1, max: 30, step: 1, unit: '' },
+    { key: 'vot', label: 'Value of time', min: 50, max: 600, step: 10, unit: '₺/person-h', price: true },
+    { key: 'petrol', label: 'Petrol price', type: 'number', step: 0.1, unit: '₺/L', price: true },
+    { key: 'diesel', label: 'Diesel price', type: 'number', step: 0.1, unit: '₺/L', price: true },
+    { key: 'lpg', label: 'LPG price', type: 'number', step: 0.1, unit: '₺/L', price: true },
+    { key: 'electricity', label: 'Electricity price', type: 'number', step: 0.1, unit: '₺/kWh', price: true },
+    { key: 'fx', label: 'Exchange rate', type: 'number', step: 0.001, unit: '₺ per US$', price: true },
   ];
   function getVal(c) { const v = c.price ? state.p.prices[c.key] : state.p[c.key]; return c.scale ? v * c.scale : v; }
   function setVal(c, v) {
@@ -50,7 +50,7 @@
       const wrap = document.createElement('div'); wrap.className = 'ctl';
       const id = 'ctl-' + c.key;
       const lab = document.createElement('label'); lab.htmlFor = id;
-      lab.innerHTML = `<span>${c.label} <span class="tr">${c.tr}</span></span><span class="val" id="${id}-val"></span>`;
+      lab.innerHTML = `<span>${c.label}</span><span class="val" id="${id}-val"></span>`;
       wrap.appendChild(lab);
       let input;
       if (c.type === 'select') {
@@ -102,7 +102,7 @@
   }
 
   function renderAll() {
-    renderCost(); renderPollution(); renderSecondary(); renderChecks(); renderAssumptions();
+    renderCost(); renderPollution(); renderStrip(); renderChecks(); renderAssumptions();
     const n = state.res.cp.frames.length;
     $('scrub').max = Math.max(0, n - 1); $('scrub').value = state.frame;
     drawReplay(); drawQueueChart();
@@ -113,10 +113,6 @@
   function renderCost() {
     const a = state.res.acc, pr = state.p.prices;
     $('costBig').innerHTML = `${tl(a.combinedTRY)}<small>≈ ${usd(a.usd(a.combinedTRY))}</small>`;
-    $('costKv').innerHTML = `
-      <dt>Energy expenditure <span class="badge sourced" style="margin-left:4px">Sourced prices</span></dt><dd>${tl(a.energyTotalTRY)} · ${usd(a.usd(a.energyTotalTRY))}</dd>
-      <dt>Time valuation at ₺${fmtInt(pr.vot)}/person-hour <span class="badge assumed" style="margin-left:4px">Assumed</span></dt><dd>${tl(a.timeTRY)} · ${usd(a.usd(a.timeTRY))}</dd>
-      <dt>Per affected vehicle</dt><dd>₺${fmt(a.perVehicleTRY, 2)} · ${usd(a.usd(a.perVehicleTRY))}</dd>`;
     const items = [
       ['Petrol', a.energyTRY.petrol, `${sgn(a.tot.dL.petrol, 1)} L`],
       ['Diesel', a.energyTRY.diesel, `${sgn(a.tot.dL.diesel, 1)} L`],
@@ -128,42 +124,46 @@
     $('costBars').innerHTML = items.map(i =>
       `<div class="bar${i[3] ? ' time' : ''}"><span class="name">${i[0]}</span><div class="track"><div class="fill" style="width:${Math.max(0, Math.abs(i[1]) / max * 44)}%"></div><span class="lbl">${i[1] < 0 ? '−' : ''}${tl(Math.abs(i[1]))} · ${usd(a.usd(Math.abs(i[1])))} <span style="color:var(--muted)">${i[2]}</span></span></div></div>`
     ).join('');
-    $('votLine').innerHTML = 'Sensitivity, same energy expenditure: ' + a.votSensitivity.map(s => `₺${s.vot}/h → <b>${tl(s.totalTRY)}</b>`).join(' · ') + '. A monetary total needs a stated time-value assumption.';
+    $('costLine').innerHTML = `Energy <b>${tl(a.energyTotalTRY)}</b> at dated retail prices (an expenditure) · time <b>${tl(a.timeTRY)}</b> at ₺${fmtInt(pr.vot)} per person-hour (a valuation, not an invoice) · <b>₺${fmt(a.perVehicleTRY, 2)}</b> per affected vehicle.`;
+    $('votLine').innerHTML = 'If time were worth ' + a.votSensitivity.map(s => `₺${s.vot}/h: <b>${tl(s.totalTRY)}</b>`).join(' · ') + '. Excludes wear, pollution damage, crashes and enforcement costs or benefits.';
   }
 
   // ---------- pollution panel ----------
   function renderPollution() {
-    const a = state.res.acc, t = a.tot;
+    const a = state.res.acc, t = a.tot, inc = a.increase, cx = a.context;
+    const up = v => (v >= 0 ? '+' : '−') + fmt(Math.abs(v), 0) + '% vs the same vehicles on a free road';
     const tiles = [
-      { n: sgn(t.dCO2 / 1000, 1), u: 'kg CO₂, tailpipe', l: 'Extra carbon dioxide', tr: 'Ek CO₂', main: true },
-      { n: sgn(t.dNOx, 0), u: 'g NOₓ', l: 'Nitrogen oxides', tr: 'Azot oksitler' },
-      { n: sgn(t.dPM, 1), u: 'g exhaust PM', l: 'Particulate matter', tr: 'Partikül' },
-      { n: sgn(t.dL.petrol + t.dL.diesel + t.dL.lpg, 1), u: `L fuel · ${sgn(t.dKwh, 1)} kWh`, l: 'Extra fuel and electricity', tr: 'Yakıt' },
-      { n: sgn(t.dBrakeKJ / 1000, 1), u: 'MJ friction braking', l: 'Brake wear indicator, mass unestimated', tr: 'Fren' },
-      { n: fmt(a.exposurePersonHours, 1), u: 'person-hours', l: 'Extra time in slow traffic near the checkpoint', tr: 'Maruziyet' },
+      { n: sgn(t.dCO2 / 1000, 1), u: 'kg CO₂', l: 'Extra carbon dioxide', d: up(inc.co2), main: true },
+      { n: sgn(t.dNOx, 0), u: 'g NOₓ', l: 'Nitrogen oxides', d: `${inc.nox >= 0 ? '+' : '−'}${fmt(Math.abs(inc.nox), 0)}%` },
+      { n: sgn(t.dPM, 1), u: 'g exhaust PM', l: 'Particulate matter', d: `${inc.pm >= 0 ? '+' : '−'}${fmt(Math.abs(inc.pm), 0)}%` },
+      { n: sgn(t.dL.petrol + t.dL.diesel + t.dL.lpg, 1), u: `L fuel · ${sgn(t.dKwh, 1)} kWh`, l: 'Extra fuel and electricity', d: `${inc.fuel >= 0 ? '+' : '−'}${fmt(Math.abs(inc.fuel), 0)}% fuel` },
+      { n: fmt(a.exposurePersonHours, 1), u: 'person-hours', l: 'Extra time in slow traffic at the checkpoint', d: 'exposure proxy' },
     ];
-    $('polTiles').innerHTML = tiles.map(x => `<div class="tile${x.main ? ' main' : ''}"><div class="n${x.main ? ' main' : ''}">${x.n}</div><div class="u">${x.u}</div><div class="l">${x.l} <span class="tr">· ${x.tr}</span></div></div>`).join('');
+    $('polTiles').innerHTML = tiles.map(x => `<div class="tile${x.main ? ' main' : ''}"><div class="n${x.main ? ' main' : ''}">${x.n}</div><div class="u">${x.u}</div><div class="l">${x.l}</div><div class="d">${x.d}</div></div>`).join('');
+    const lines = [
+      ['CO₂', `one average petrol car driving <b>${fmtInt(cx.carKm)} km</b> · <b>${fmt(cx.householdDays, 0)} days</b> of a household's electricity · what <b>${fmt(cx.treeYears, 1)} trees</b> take up in a year`],
+      ['NOₓ', `a Euro 6 diesel car driving <b>${fmtInt(cx.euro6DieselKm)} km</b> at its 80 mg/km limit · an older diesel driving <b>${fmtInt(cx.olderDieselKm)} km</b> at 0.5 g/km`],
+      ['PM', `a car driving <b>${fmtInt(cx.euroPmKm)} km</b> at the 4.5 mg/km Euro 5/6 limit, exhaust only`],
+      ['Time', `travel time <b>+${fmt(inc.travel, 0)}%</b>, emissions about <b>+${fmt(inc.co2, 0)}%</b>: idling and creeping burn less per second than cruising, so pollution grows more slowly than delay`],
+    ];
+    $('context').innerHTML = lines.map(l => `<li><b>${l[0]}</b><span>${l[1]}</span></li>`).join('');
   }
 
-  // ---------- secondary ----------
-  function renderSecondary() {
+  // ---------- results strip ----------
+  function renderStrip() {
     const r = state.res, a = r.acc, s = r.cp.stats;
     const complete = !r.cp.incomplete && s.remaining === 0;
-    $('secondary').innerHTML = `
-      <div class="card"><h3>Additional delay · Ek gecikme</h3><dl class="kv">
-        <dt>Vehicle-hours</dt><dd>${fmt(a.vehicleHours, 1)}</dd><dt>Person-hours</dt><dd>${fmt(a.personHours, 1)}</dd>
-        <dt>Mean per vehicle</dt><dd>${fmt(a.meanDelayS, 0)} s</dd><dt>95th percentile</dt><dd>${fmt(a.p95DelayS, 0)} s</dd>
-        <dt>Negative differences</dt><dd>${a.tot.negative}</dd></dl></div>
-      <div class="card"><h3>Queue · Kuyruk</h3><dl class="kv">
-        <dt>Maximum vehicles</dt><dd>${s.maxQueue}</dd><dt>Longest tail</dt><dd>${fmtInt(s.maxTailM)} m</dd>
-        <dt>Restriction ends</dt><dd>${mmss(r.cp.D)}</dd><dt>Queue clears</dt><dd>${r.cp.queueClearedAt !== null ? mmss(r.cp.queueClearedAt) : '—'}</dd></dl></div>
-      <div class="card"><h3>Inspections · Kontrol</h3><dl class="kv">
-        <dt>Selected</dt><dd>${s.selected}</dd><dt>Completed</dt><dd>${s.serviced}</dd><dt>Released unserved</dt><dd>${s.unserved}</dd>
-        <dt>Overflow events</dt><dd>${s.overflow}</dd><dt>Bay utilisation</dt><dd>${fmt(a.bayUtilisation * 100, 0)} %</dd></dl></div>
-      <div class="card"><h3>Run integrity</h3><dl class="kv">
-        <dt>Vehicles in cohort</dt><dd>${fmtInt(a.tot.n)}</dd><dt>Paired by id</dt><dd>${fmtInt(a.tot.n)} / ${fmtInt(s.intended)}</dd>
-        <dt>Delayed entries</dt><dd>${s.blockedEntries}</dd><dt>Status</dt><dd class="flag ${complete ? 'ok' : 'bad'}">${complete ? 'COMPLETE' : 'INCOMPLETE'}</dd></dl>
-        ${complete ? '' : '<p class="cap">The queue had not cleared 90 minutes after the restriction ended. Totals understate the full burden.</p>'}</div>`;
+    const items = [
+      [fmt(a.vehicleHours, 1), 'extra vehicle-hours'],
+      [fmt(a.personHours, 1), 'extra person-hours'],
+      [`${fmt(a.meanDelayS, 0)} s`, `mean extra delay · 95th pct ${fmt(a.p95DelayS, 0)} s`],
+      [`${s.maxQueue}`, `vehicles queued at peak · tail ${fmtInt(s.maxTailM)} m`],
+      [r.cp.queueClearedAt !== null ? mmss(r.cp.queueClearedAt) : '—', `queue clears · restriction ends ${mmss(r.cp.D)}`],
+      [`${s.serviced} / ${s.selected}`, `inspections completed / selected · ${s.unserved} unserved · ${s.overflow} overflow`],
+      [`${sgn(a.tot.dBrakeKJ / 1000, 1)} MJ`, 'friction braking, wear mass unestimated'],
+      [`<span class="flag ${complete ? 'ok' : 'bad'}">${complete ? 'COMPLETE' : 'INCOMPLETE'}</span>`, `${fmtInt(a.tot.n)} vehicles paired by id · ${s.blockedEntries} delayed entries${complete ? '' : ' · queue did not clear within 90 min'}`],
+    ];
+    $('strip').innerHTML = items.map(i => `<div class="st"><div class="n">${i[0]}</div><div class="l">${i[1]}</div></div>`).join('');
   }
 
   // ---------- checks & assumptions ----------

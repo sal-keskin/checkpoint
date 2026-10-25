@@ -60,7 +60,6 @@ h2.sec .tr { color: var(--muted); font-size: 13px; }
 .controls { background: var(--panel); border: 1px solid var(--line); padding: 16px; align-self: start; position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); min-width: 0; }
 @media (max-width: 880px) { .controls { position: static; } }
 .controls h2.sec { margin-bottom: 6px; }
-.controls p.hint { margin: 0 0 12px; color: var(--muted); font-size: 12.5px; }
 .ctl { display: grid; gap: 4px; padding: 9px 0; border-top: 1px solid var(--line); }
 .ctl:first-of-type { border-top: 0; }
 .ctl label { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
@@ -102,13 +101,21 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 @media (prefers-reduced-motion: reduce) { .bar .fill { transition: none; } }
 
 /* pollution tiles */
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 10px; }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .tile { border: 1px solid var(--line); padding: 10px 12px; background: var(--bg); min-width: 0; }
 .tile .n { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 22px; line-height: 1.1; }
 .tile .n.main { font-size: 30px; }
 .tile .u { color: var(--muted); font-size: 12px; margin-top: 2px; }
 .tile .l { font-size: 12.5px; margin-top: 6px; }
-.tile .l .tr { color: var(--muted); }
+.tile .d { font-family: var(--mono); font-size: 11.5px; color: var(--hot); margin-top: 4px; }
+.tile.main { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; gap: 4px 18px; align-items: baseline; }
+.tile.main .u, .tile.main .l { grid-column: 2; margin: 0; }
+.tile.main .d { grid-column: 1 / -1; }
+.ctx-h { margin: 4px 0 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.ctx { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: 13px; }
+.ctx li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; align-items: baseline; }
+.ctx li b { font-family: var(--mono); font-weight: 400; color: var(--accent); font-size: 12px; letter-spacing: 0.06em; }
+.ctx li span { min-width: 0; }
 
 /* replay */
 .replay { background: var(--panel); border: 1px solid var(--line); padding: 14px 16px 12px; min-width: 0; }
@@ -126,11 +133,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .legend .zone::before { background: var(--orange); opacity: 0.5; }
 .legend .tail::before { background: var(--yellow); width: 3px; }
 
-/* secondary tiles */
-.sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
-.card { background: var(--panel); border: 1px solid var(--line); padding: 12px 14px; min-width: 0; }
-.card h3 { margin: 0 0 6px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
-.card .kv { font-size: 13px; }
+/* results strip */
+.strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.strip .st { background: var(--panel); padding: 10px 12px; min-width: 0; }
+.strip .st .n { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 18px; line-height: 1.2; }
+.strip .st .l { color: var(--muted); font-size: 12px; margin-top: 2px; }
 .flag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; }
 .flag.ok { color: var(--ok); }
 .flag.bad { color: var(--hot); }

@@ -67,6 +67,16 @@
   A('selection', 'independent uniform draw per vehicle', '', 'ASSUMED', 'pre-assigned in the manifest and reused across layouts');
   A('horizon', 'until the queue has been clear for 30 s', '', 'ASSUMED', 'arrivals stop afterwards; the run is flagged incomplete if the queue has not cleared 90 min after the restriction');
 
+  // ---------- context references for the pollution panel ----------
+  const CONTEXT = {
+    carCo2GPerKm: A('ctx_car_co2', 150, 'g CO2 per km', 'ASSUMED', 'real-world average petrol car, used to express extra CO2 as kilometres driven'),
+    householdCo2KgPerDay: A('ctx_household_co2', 3.3, 'kg CO2 per day', 'ASSUMED', 'household electricity, about 220 kWh/month at 0.45 kg CO2 per kWh grid intensity'),
+    treeCo2KgPerYear: A('ctx_tree_co2', 22, 'kg CO2 per tree-year', 'ASSUMED', 'commonly quoted uptake of one mature tree; varies widely by species and climate'),
+    euro6DieselNoxMgPerKm: A('ctx_euro6_nox', 80, 'mg NOx per km', 'SOURCED', 'Euro 6 diesel passenger-car type-approval limit (Regulation (EC) 715/2007)'),
+    olderDieselNoxGPerKm: A('ctx_older_diesel_nox', 0.5, 'g NOx per km', 'ASSUMED', 'real-world order of magnitude for a Euro 4-5 diesel car'),
+    euroPmMgPerKm: A('ctx_euro_pm', 4.5, 'mg PM per km', 'SOURCED', 'Euro 5/6 particulate mass limit for passenger cars'),
+  };
+
   // ---------- random streams ----------
   function rng(seed) {
     let a = seed >>> 0;
@@ -497,6 +507,25 @@
       bc.n++; bc.dT += r.dT;
     }
     dTs.sort((a, b) => a - b);
+    // the same cohort on the free road, for "simulated vs free-flow" comparison
+    const baseTot = { fuelL: 0, kwh: 0, co2: 0, nox: 0, pm: 0, travelS: 0, brakeKJ: 0 };
+    for (const id of cp.order) {
+      const b = base.results.get(id); if (!b) continue;
+      baseTot.fuelL += b.fuelL; baseTot.kwh += b.kwh; baseTot.co2 += b.co2; baseTot.nox += b.nox; baseTot.pm += b.pm; baseTot.travelS += b.travel; baseTot.brakeKJ += b.brakeKJ;
+    }
+    const pct = (d, b) => (b > 0 ? d / b * 100 : 0);
+    const increase = {
+      fuel: pct(tot.dL.petrol + tot.dL.diesel + tot.dL.lpg, baseTot.fuelL), co2: pct(tot.dCO2, baseTot.co2), nox: pct(tot.dNOx, baseTot.nox),
+      pm: pct(tot.dPM, baseTot.pm), travel: pct(tot.dT, baseTot.travelS), brake: pct(tot.dBrakeKJ, baseTot.brakeKJ), kwh: pct(tot.dKwh, baseTot.kwh),
+    };
+    const context = {
+      carKm: tot.dCO2 / CONTEXT.carCo2GPerKm,
+      householdDays: tot.dCO2 / 1000 / CONTEXT.householdCo2KgPerDay,
+      treeYears: tot.dCO2 / 1000 / CONTEXT.treeCo2KgPerYear,
+      euro6DieselKm: tot.dNOx * 1000 / CONTEXT.euro6DieselNoxMgPerKm,
+      olderDieselKm: tot.dNOx / CONTEXT.olderDieselNoxGPerKm,
+      euroPmKm: tot.dPM * 1000 / CONTEXT.euroPmMgPerKm,
+    };
     const vehicleHours = tot.dT / 3600, personHours = tot.personS / 3600;
     const energyTRY = {
       petrol: tot.dL.petrol * pr.petrol, diesel: tot.dL.diesel * pr.diesel, lpg: tot.dL.lpg * pr.lpg,
@@ -511,7 +540,7 @@
       minDelayS: dTs.length ? dTs[0] : 0,
       energyTRY, energyTotalTRY, timeTRY, combinedTRY: energyTotalTRY + timeTRY,
       usd: x => x / pr.fx, votSensitivity,
-      exposurePersonHours: tot.dExpPersonS / 3600,
+      exposurePersonHours: tot.dExpPersonS / 3600, baseTot, increase, context,
       perVehicleTRY: tot.n ? (energyTotalTRY + timeTRY) / tot.n : 0,
       bayUtilisation: cp.stats.serviceSeconds / Math.max(1, p.bays * cp.D),
     };
@@ -556,7 +585,7 @@
     return ['key,value,unit,status,note'].concat(rows.map(r => [r.key, r.value, r.unit, r.status, r.note].map(esc).join(','))).join('\n');
   }
 
-  const api = { ASSUMPTIONS, PRICES_DEFAULT, CORRIDOR: X, CLASSES, FUELS, defaultParams, makeManifest, runScenario, account, runPaired, pairedCsv, assumptionsCsv, rng, normal, lognormalFromZ };
+  const api = { ASSUMPTIONS, PRICES_DEFAULT, CONTEXT, CORRIDOR: X, CLASSES, FUELS, defaultParams, makeManifest, runScenario, account, runPaired, pairedCsv, assumptionsCsv, rng, normal, lognormalFromZ };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.CheckpointLab = api;
 })(typeof self !== 'undefined' ? self : globalThis);
